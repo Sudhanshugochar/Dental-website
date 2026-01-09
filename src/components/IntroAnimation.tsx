@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 
 interface IntroAnimationProps {
   onComplete: () => void;
@@ -7,6 +8,8 @@ interface IntroAnimationProps {
 
 const IntroAnimation = ({ onComplete }: IntroAnimationProps) => {
   const [showTagline, setShowTagline] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   useEffect(() => {
     const taglineTimer = setTimeout(() => setShowTagline(true), 1500);
@@ -21,7 +24,11 @@ const IntroAnimation = ({ onComplete }: IntroAnimationProps) => {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-background via-muted to-background overflow-hidden"
+        className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden ${
+          isDark 
+            ? "bg-gradient-to-br from-background via-muted to-background" 
+            : "bg-gradient-to-br from-background via-muted to-background"
+        }`}
         initial={{ opacity: 1 }}
         exit={{ opacity: 0, scale: 1.1 }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -31,7 +38,7 @@ const IntroAnimation = ({ onComplete }: IntroAnimationProps) => {
           {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute rounded-full bg-primary/5"
+              className={`absolute rounded-full ${isDark ? "bg-primary/10" : "bg-primary/5"}`}
               style={{
                 width: `${150 + i * 100}px`,
                 height: `${150 + i * 100}px`,
@@ -55,21 +62,21 @@ const IntroAnimation = ({ onComplete }: IntroAnimationProps) => {
 
         {/* Dental icons floating */}
         <motion.div
-          className="absolute top-20 left-20 text-6xl opacity-20"
+          className={`absolute top-20 left-20 text-6xl ${isDark ? "opacity-30" : "opacity-20"}`}
           animate={{ y: [-10, 10, -10], rotate: [-5, 5, -5] }}
           transition={{ duration: 4, repeat: Infinity }}
         >
           🦷
         </motion.div>
         <motion.div
-          className="absolute bottom-32 right-20 text-5xl opacity-20"
+          className={`absolute bottom-32 right-20 text-5xl ${isDark ? "opacity-30" : "opacity-20"}`}
           animate={{ y: [10, -10, 10], rotate: [5, -5, 5] }}
           transition={{ duration: 5, repeat: Infinity }}
         >
           ✨
         </motion.div>
         <motion.div
-          className="absolute top-40 right-32 text-4xl opacity-15"
+          className={`absolute top-40 right-32 text-4xl ${isDark ? "opacity-25" : "opacity-15"}`}
           animate={{ y: [-15, 15, -15] }}
           transition={{ duration: 6, repeat: Infinity }}
         >
@@ -97,7 +104,7 @@ const IntroAnimation = ({ onComplete }: IntroAnimationProps) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold gradient-text mb-4"
+            className={`text-4xl sm:text-5xl lg:text-6xl font-bold gradient-text mb-4 ${isDark ? "neon-text" : ""}`}
           >
             Shree Ram Dental Clinic
           </motion.h1>
@@ -117,7 +124,7 @@ const IntroAnimation = ({ onComplete }: IntroAnimationProps) => {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 1, delay: 2 }}
-            className="h-1 w-32 mx-auto mt-8 rounded-full gradient-bg"
+            className={`h-1 w-32 mx-auto mt-8 rounded-full gradient-bg ${isDark ? "shadow-neon" : ""}`}
           />
         </div>
       </motion.div>

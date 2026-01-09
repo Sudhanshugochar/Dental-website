@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Phone, Calendar, Sparkles } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const floatingIcons = [
   { icon: "🦷", position: "top-20 left-[10%]", delay: 0 },
@@ -11,6 +12,9 @@ const floatingIcons = [
 ];
 
 const HeroSection = () => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     element?.scrollIntoView({ behavior: "smooth" });
@@ -24,19 +28,19 @@ const HeroSection = () => {
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-mint/5 rounded-full blur-3xl" />
+        <div className={`absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl ${isDark ? "bg-primary/10" : "bg-primary/5"}`} />
+        <div className={`absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl ${isDark ? "bg-secondary/10" : "bg-secondary/5"}`} />
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl ${isDark ? "bg-mint/10" : "bg-mint/5"}`} />
       </div>
 
       {/* Floating dental icons */}
       {floatingIcons.map((item, index) => (
         <motion.div
           key={index}
-          className={`absolute ${item.position} text-4xl sm:text-5xl opacity-20`}
+          className={`absolute ${item.position} text-4xl sm:text-5xl ${isDark ? "opacity-30" : "opacity-20"}`}
           initial={{ opacity: 0, scale: 0 }}
           animate={{
-            opacity: 0.2,
+            opacity: isDark ? 0.3 : 0.2,
             scale: 1,
             y: [0, -20, 0],
             rotate: [-5, 5, -5],
@@ -60,7 +64,11 @@ const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="mb-6"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+          <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
+            isDark 
+              ? "bg-primary/20 text-primary border border-primary/30 shadow-neon" 
+              : "bg-primary/10 text-primary"
+          }`}>
             <Sparkles size={16} />
             Welcome to Excellence in Dental Care
           </span>
@@ -72,7 +80,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
         >
-          <span className="gradient-text">Shree Ram</span>
+          <span className={`gradient-text ${isDark ? "neon-text" : ""}`}>Shree Ram</span>
           <br />
           <span className="text-foreground">Dental Clinic</span>
         </motion.h1>
@@ -85,7 +93,7 @@ const HeroSection = () => {
         >
           Advanced Dental Care with Compassion & Precision.
           <br className="hidden sm:block" />
-          <span className="text-primary font-medium">Your Smile, Our Priority.</span>
+          <span className={`text-primary font-medium ${isDark ? "neon-text" : ""}`}>Your Smile, Our Priority.</span>
         </motion.p>
 
         <motion.div
@@ -95,8 +103,8 @@ const HeroSection = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <motion.button
-            className="btn-primary flex items-center gap-2 text-lg w-full sm:w-auto justify-center"
-            whileHover={{ scale: 1.05, boxShadow: "var(--shadow-float)" }}
+            className={`btn-primary flex items-center gap-2 text-lg w-full sm:w-auto justify-center ${isDark ? "animate-neon-pulse" : ""}`}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => scrollToSection("#appointment")}
           >
@@ -134,7 +142,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2 + index * 0.1 }}
             >
-              <div className="text-2xl sm:text-3xl font-bold text-primary">{stat.value}</div>
+              <div className={`text-2xl sm:text-3xl font-bold text-primary ${isDark ? "neon-text" : ""}`}>{stat.value}</div>
               <div className="text-sm">{stat.label}</div>
             </motion.div>
           ))}
@@ -148,7 +156,7 @@ const HeroSection = () => {
         animate={{ opacity: 1, y: [0, 10, 0] }}
         transition={{ delay: 1.5, duration: 2, repeat: Infinity }}
       >
-        <div className="w-6 h-10 border-2 border-primary/30 rounded-full flex justify-center pt-2">
+        <div className={`w-6 h-10 border-2 rounded-full flex justify-center pt-2 ${isDark ? "border-primary/50" : "border-primary/30"}`}>
           <div className="w-1.5 h-3 bg-primary rounded-full" />
         </div>
       </motion.div>
