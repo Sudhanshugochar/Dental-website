@@ -1,6 +1,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { useTheme } from "next-themes";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -17,11 +19,15 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const navBackground = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.9)"]
+    isDark 
+      ? ["rgba(10, 15, 20, 0)", "rgba(10, 15, 20, 0.9)"]
+      : ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.9)"]
   );
 
   useEffect(() => {
@@ -43,7 +49,7 @@ const Navbar = () => {
       style={{ backgroundColor: navBackground }}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled ? "glass-nav shadow-lg" : ""
-      }`}
+      } ${isDark && isScrolled ? "shadow-neon" : ""}`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
@@ -58,7 +64,7 @@ const Navbar = () => {
             }}
           >
             <span className="text-2xl">🦷</span>
-            <span className="font-bold text-lg sm:text-xl gradient-text">
+            <span className={`font-bold text-lg sm:text-xl gradient-text ${isDark ? "neon-text" : ""}`}>
               Shree Ram Dental
             </span>
           </motion.a>
@@ -84,8 +90,9 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* CTA Button & Theme Toggle */}
           <div className="hidden lg:flex items-center gap-4">
+            <ThemeToggle />
             <motion.a
               href="tel:+1234567890"
               className="flex items-center gap-2 text-sm font-medium text-primary"
@@ -104,14 +111,17 @@ const Navbar = () => {
             </motion.button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <motion.button
-            className="lg:hidden p-2 rounded-lg hover:bg-primary/10"
-            onClick={() => setIsOpen(!isOpen)}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
+          {/* Mobile Menu Button & Theme Toggle */}
+          <div className="lg:hidden flex items-center gap-3">
+            <ThemeToggle />
+            <motion.button
+              className="p-2 rounded-lg hover:bg-primary/10"
+              onClick={() => setIsOpen(!isOpen)}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </motion.button>
+          </div>
         </div>
       </div>
 
@@ -120,7 +130,9 @@ const Navbar = () => {
         initial={false}
         animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
         transition={{ duration: 0.3 }}
-        className="lg:hidden overflow-hidden bg-white/95 backdrop-blur-xl border-t border-border"
+        className={`lg:hidden overflow-hidden backdrop-blur-xl border-t border-border ${
+          isDark ? "bg-background/95" : "bg-background/95"
+        }`}
       >
         <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
           {navLinks.map((link) => (

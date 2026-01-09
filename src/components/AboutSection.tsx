@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { Award, Users, Smile, Clock } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const stats = [
   { icon: Clock, value: 15, suffix: "+", label: "Years of Experience" },
@@ -51,6 +52,8 @@ const Counter = ({
 const AboutSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   return (
     <section id="about" className="section-container bg-muted/30">
@@ -62,12 +65,14 @@ const AboutSection = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
+          <span className={`inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4 ${
+            isDark ? "bg-primary/20 text-primary border border-primary/30" : "bg-primary/10 text-primary"
+          }`}>
             About Us
           </span>
           <h2 className="section-title">
             Your Trusted Partner in
-            <span className="gradient-text"> Dental Health</span>
+            <span className={`gradient-text ${isDark ? "neon-text" : ""}`}> Dental Health</span>
           </h2>
         </motion.div>
 
@@ -93,7 +98,11 @@ const AboutSection = () => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium"
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${
+                      isDark 
+                        ? "bg-primary/20 text-primary border border-primary/30" 
+                        : "bg-primary/10 text-primary"
+                    }`}
                   >
                     ✓ {feature}
                   </motion.span>
@@ -115,12 +124,16 @@ const AboutSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.6 + index * 0.1 }}
-                className="glass-card p-6 rounded-2xl text-center hover:shadow-float transition-all duration-300"
+                className={`glass-card p-6 rounded-2xl text-center transition-all duration-300 ${
+                  isDark ? "hover:shadow-neon hover:border-primary/30" : "hover:shadow-float"
+                }`}
               >
-                <div className="w-14 h-14 mx-auto mb-4 rounded-xl gradient-bg flex items-center justify-center">
+                <div className={`w-14 h-14 mx-auto mb-4 rounded-xl gradient-bg flex items-center justify-center ${
+                  isDark ? "shadow-neon" : ""
+                }`}>
                   <stat.icon className="w-7 h-7 text-primary-foreground" />
                 </div>
-                <div className="text-3xl font-bold text-foreground mb-1">
+                <div className={`text-3xl font-bold text-foreground mb-1 ${isDark ? "neon-text" : ""}`}>
                   <Counter value={stat.value} suffix={stat.suffix} inView={isInView} />
                 </div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
